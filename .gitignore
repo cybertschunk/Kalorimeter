@@ -1,4 +1,8 @@
+#project
+log*
+
 # C++ objects and libs
+
 
 *.slo
 *.lo
