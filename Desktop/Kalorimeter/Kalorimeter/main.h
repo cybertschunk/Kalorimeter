@@ -16,11 +16,14 @@ namespace Main
 {
 
 	extern Kalorimeter* kalorimeter;
+	extern QSettings* settings;
+
 	
 	void run(QApplication &app);
 	int init();
 	int shutdown();
 	void showGui();
+	int initSettings();
 
 	class KalorimeterApp : public QApplication
 	{
