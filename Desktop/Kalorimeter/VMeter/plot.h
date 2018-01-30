@@ -15,6 +15,8 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
+#include <mutex>
+
 QT_CHARTS_BEGIN_NAMESPACE
 class QSplineSeries;
 class QValueAxis;
@@ -28,8 +30,14 @@ class Plot : public QChart
     Q_OBJECT
 
 public:
-    Plot(QString port, Qt::WindowFlags flags = 0,QGraphicsItem* parent=Q_NULLPTR) : QChart(QChart::ChartTypeCartesian,parent,flags)
-    {serialPort = new QSerialPort(port); init(); }
+    Plot(QString port, Qt::WindowFlags flags = 0,QGraphicsItem* parent=Q_NULLPTR) :
+        QChart(QChart::ChartTypeCartesian,parent,flags),
+        m_series(0),
+        m_step(0),
+        m_x(5),
+        m_y(1)
+        {serialPort = new QSerialPort(port); init(); }
+
     ~Plot();
 
 public slots:
@@ -48,6 +56,10 @@ private:
     qreal m_step;
     qreal m_x;
     qreal m_y;
+    long startTimestamp;
+    long lastTimestamp;
+
+    static std::mutex updateData;
 };
 
 

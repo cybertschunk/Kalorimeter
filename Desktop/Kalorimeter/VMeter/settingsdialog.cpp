@@ -23,13 +23,15 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::saveSettings()
 {
     Logger::log << L_INFO << "Updating settings...\n";
-    Main::settings->setValue("interface/serial",ui->serialInterfaceComboBox->currentText());
-    Main::settings->setValue("interface/serial/baudrate",serialDescriptionToPortName(ui->bautRateComboBox->currentText()));
+    Main::settings->setValue("interface/serial",serialDescriptionToPortName(ui->serialInterfaceComboBox->currentText()));
+    Main::settings->setValue("interface/serial/baudrate",ui->bautRateComboBox->currentText());
 
     Logger::log << L_INFO << "Saved following settings:\n";
     for(QString key : Main::settings->allKeys())
         Logger::log << L_INFO << key << " : " << Main::settings->value(key).toString() << "\n";
     this->accept();
+
+    emit settingsChanged();
 }
 
 void SettingsDialog::init()

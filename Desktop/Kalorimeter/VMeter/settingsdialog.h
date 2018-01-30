@@ -19,6 +19,9 @@ public:
 public slots:
     void saveSettings();
 
+signals:
+    void settingsChanged();
+
 private:
     Ui::SettingsDialog *ui;
     void init();

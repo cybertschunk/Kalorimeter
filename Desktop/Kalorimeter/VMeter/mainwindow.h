@@ -22,6 +22,7 @@ public:
     ~MainWindow();
 public slots:
     void showSettingsDialog();
+    void updateToSettings();
 private:
 
     void init();

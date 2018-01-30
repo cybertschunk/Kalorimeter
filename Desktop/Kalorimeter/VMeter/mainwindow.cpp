@@ -25,12 +25,10 @@ void MainWindow::showSettingsDialog()
     settingsDialog->showNormal();
 }
 
-void MainWindow::init()
+void MainWindow::updateToSettings()
 {
-    settingsDialog = new SettingsDialog(this);
     QString serialPortDesc = Main::settings->value("interface/serial",
                                                QSerialPortInfo::availablePorts().first().portName()).toString();
-
     plot = new Plot(serialPortDesc);
     plot->setAnimationOptions(QChart::AllAnimations);
     plot->setTitle("Kalorimeter");
@@ -41,6 +39,13 @@ void MainWindow::init()
     chartView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Maximum);
     chartView->repaint();
     this->setCentralWidget(chartView);
+}
+
+void MainWindow::init()
+{
+    settingsDialog = new SettingsDialog(this);
+
+    updateToSettings();
 
     buildConnects();
 }
@@ -50,4 +55,5 @@ void MainWindow::buildConnects()
     //Menu
     QObject::connect(ui->actionBeenden,&QAction::triggered,this,&MainWindow::close);
     QObject::connect(ui->actionEinstellungen,&QAction::triggered,this,&MainWindow::showSettingsDialog);
+    QObject::connect(settingsDialog,&SettingsDialog::settingsChanged,this,&MainWindow::updateToSettings);
 }

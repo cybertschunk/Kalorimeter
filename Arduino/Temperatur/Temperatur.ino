@@ -28,7 +28,7 @@ void loop() {
     delay(delayVal);
 }
 
-float getTemperatur() {
+int getTemperatur() {
 
   inValTotal = 0;
   for(i = 0;i<runs;i++){
@@ -37,5 +37,5 @@ float getTemperatur() {
   }
 
   inValTotal = inValTotal / runs / 2;
-  return(inValTotal);
+  return(int(inValTotal));
 }
