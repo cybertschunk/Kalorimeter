@@ -27,13 +27,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         logger.cpp \
-        plot.cpp
+        plot.cpp \
+    settingsdialog.cpp
 
 HEADERS += \
         mainwindow.h \
         main.h \
         logger.h \
-        plot.h
+        plot.h \
+    settingsdialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    settingsdialog.ui

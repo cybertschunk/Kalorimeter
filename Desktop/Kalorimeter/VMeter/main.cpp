@@ -1,4 +1,4 @@
-#include "mainwindow.h".h"
+#include "mainwindow.h"
 #include <QtWidgets/QApplication>
 #include "main.h"
 
@@ -7,6 +7,8 @@ int main(int argc, char *argv[])
 {
     Main::KalorimeterApp app(argc, argv);
     Main::run(app);
+
+    return EXIT_SUCCESS;
 }
 
 namespace Main {
@@ -41,10 +43,9 @@ namespace Main {
     {
         //Initializing logger
         Logger::log.init(Logger::All);
+        initSettings();
 
         mainWindow= new MainWindow(Q_NULLPTR);
-
-        initSettings();
 
         Logger::log << L_INFO << "Program initialized.\n";
 
@@ -80,6 +81,11 @@ namespace Main {
         Logger::log << L_INFO << "reading config file from " << Main::settings->fileName() << "\n";
         settings->sync();
         Logger::log << L_INFO << "Settings initialized!\n";
+
+        Logger::log << L_INFO << "Read following settings:\n";
+        for(QString key : Main::settings->allKeys())
+            Logger::log << L_INFO << key << " : " << Main::settings->value(key).toString() << "\n";
+
         return EXIT_SUCCESS;
     }
 
