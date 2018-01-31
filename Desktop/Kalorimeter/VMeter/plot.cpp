@@ -12,8 +12,8 @@
 #include <mutex>
 
 
-//Static variables
-std::mutex Plot::updateData;
+//global variables
+std::mutex updateData;
 
 //functions
 Plot::~Plot()

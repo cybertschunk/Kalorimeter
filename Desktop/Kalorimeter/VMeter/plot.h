@@ -59,8 +59,7 @@ private:
     long startTimestamp;
     long lastTimestamp;
 
-    static std::mutex updateData;
 };
-
+extern std::mutex updateData;
 
 #endif
