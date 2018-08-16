@@ -17,7 +17,7 @@ after_build:
   - rm release/*.cpp
 
 artifacts:
-  - path: Desktop/Kalorimeter/VMeter/Output/VMeter-*.exe
+  - path: Desktop/Kalorimeter/VMeter/Output/
   - path: Desktop/Kalorimeter/VMeter/release
     type: zip
 
