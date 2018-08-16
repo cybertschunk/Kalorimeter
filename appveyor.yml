@@ -1,6 +1,7 @@
 image: Visual Studio 2017
 
 install:
+  - set PROJECT_DIR=Desktop/Kalorimeter/VMeter
   - set QTDIR=C:\Qt\5.10.1\mingw53_32
   - choco install -y InnoSetup
   - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw530_32\bin;%PATH%;"C:\Program Files (x86)\Inno Setup 5"
@@ -16,8 +17,8 @@ after_build:
   - rm release/*.cpp
 
 artifacts:
-  - path: Output
-  - path: release
+  - path: Desktop/Kalorimeter/VMeter/Output/VMeter-*.exe
+  - path: Desktop/Kalorimeter/VMeter/release
     type: zip
 
 deploy:
