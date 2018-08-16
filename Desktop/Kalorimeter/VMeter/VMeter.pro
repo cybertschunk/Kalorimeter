@@ -40,3 +40,6 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     settingsdialog.ui
+
+DISTFILES += \
+    appveyor.yml
