@@ -4,13 +4,19 @@ branches:
     - master
 
 install:
-  - set QTDIR=C:\Qt\5.10.1\msvc2017_64
-  - set PATH=%QTDIR%\bin;%PATH%;
-
+  - set QTDIR=C:\C:\Qt\5.10.1\mingw53_32
+  - choco install -y InnoSetup
+  - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw530_32\bin;%PATH%;"C:\Program Files (x86)\Inno Setup 5"
 build_script:
-  - qmake Desktop/Kalorimeter/VMeter/VMeter.pro -spec win32-msvc
-  - qmake_all
-  - C:\Qt\Tools\QtCreator\bin\jom.exe -f Makefile.Release
+  - cd Desktop/Kalorimeter/VMeter
+  - qmake VMeter.pro
+  - mingw32-make
+after_build:
+  - windeployqt release/VMeter.exe
+  - cmd: cp LICENSE release/LICENSE.txt"
+  - iscc innosetup.iss
+  - rm release/*.o
+  - rm release/*.cpp
 
 deploy:
   release: Kalorimeter-v$(appveyor_build_version)
