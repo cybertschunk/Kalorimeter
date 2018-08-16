@@ -23,7 +23,7 @@ deploy:
   description: 'Kalorimeter Release'
   provider: GitHub
   auth_token:
-    secure: dQVcTF6DiR2PNMN669wx9hUaz0/5gqIpE56zDXOW94KFmz2oFn9Qbd9ApmsQ6Wn9 # your encrypted token from GitHub
+    secure: dQVcTF6DiR2PNMN669wx9hUaz0/5gqIpE56zDXOW94KFmz2oFn9Qbd9ApmsQ6Wn9 
   artifact: C:/projects/kalorimeter
   draft: false
   prerelease: false
