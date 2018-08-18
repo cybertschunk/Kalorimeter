@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "vexception.h"
+
 #include <QErrorMessage>
 #include <QSerialPortInfo>
 #include <QChartView>
@@ -25,6 +27,7 @@ MainWindow::~MainWindow()
 void MainWindow::showSettingsDialog()
 {
     settingsDialog->showNormal();
+    settingsDialog->exec();
 }
 
 void MainWindow::updateToSettings()
@@ -40,8 +43,17 @@ void MainWindow::updateToSettings()
 
     QString serialPortDesc = Main::settings->value("interface/serial",
                                                    QSerialPortInfo::availablePorts().first().portName()).toString();
-    plot = std::unique_ptr<Plot>(new Plot(serialPortDesc));
 
+    plot = std::unique_ptr<Plot>(new Plot(serialPortDesc));
+    try
+    {
+        plot->init();
+    }catch(SerialException se)
+    {
+        QErrorMessage errorMsg(this);
+        errorMsg.showMessage("Zu dem konfigurierten seriellen Interface konnte keine Verbindung hergestellt werden. Bitte wählen Sie ein anderes!");
+        return showSettingsDialog();
+    }
     plot->setAnimationOptions(QChart::AllAnimations);
     plot->setTitle("Kalorimeter");
 

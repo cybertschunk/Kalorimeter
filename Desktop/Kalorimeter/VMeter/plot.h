@@ -36,8 +36,9 @@ public:
         m_step(0),
         m_x(5),
         m_y(1)
-        {serialPort = new QSerialPort(port); init(); }
+        {serialPort = new QSerialPort(port);}
 
+    void init();
     ~Plot();
 
 public slots:
@@ -45,7 +46,6 @@ public slots:
 
 private:
 
-    void init();
 
     QTimer intervalTimer;
 
