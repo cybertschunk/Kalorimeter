@@ -26,6 +26,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::showSettingsDialog()
 {
+    settingsDialog->setWindowModality(Qt::ApplicationModal);
     settingsDialog->exec();
 }
 
