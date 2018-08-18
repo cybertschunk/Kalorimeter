@@ -9,6 +9,7 @@
 #include <QVector>
 #include <QErrorMessage>
 
+#include <memory>
 
 class Logger;
 class MainWindow;
@@ -16,8 +17,8 @@ class MainWindow;
 namespace Main
 {
 
-    extern MainWindow* mainWindow;
-    extern QSettings* settings;
+    extern std::unique_ptr<MainWindow> mainWindow;
+    extern std::unique_ptr<QSettings> settings;
 
 
     void run(QApplication &app);
