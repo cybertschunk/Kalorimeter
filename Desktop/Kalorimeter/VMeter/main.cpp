@@ -52,6 +52,12 @@ namespace Main {
         return EXIT_SUCCESS;
     }
 
+    /**
+     * cleans up and shuts down the program
+     *
+     * @brief shutdown
+     * @return
+     */
     int shutdown()
     {
         Logger::log << L_INFO << "Shutting down program.\n";
