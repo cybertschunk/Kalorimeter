@@ -7,6 +7,7 @@
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QMessageBox>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -60,7 +61,12 @@ void SettingsDialog::init()
 {
     //check if any serial interfaces are available
     if(QSerialPortInfo::availablePorts().isEmpty())
-        throw NoSerialInterfaceException("No serial interface has been found!");
+    {
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setText("Es wurde kein serielles Interface gefunden. Bitte schließen Sie den Arduino an!");
+        msgBox->exec();
+        return init();
+    }
 
     //Initialize boxes
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();

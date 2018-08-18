@@ -32,15 +32,6 @@ void MainWindow::showSettingsDialog()
 
 void MainWindow::updateToSettings()
 {
-    //check if any serial interfaces are available
-    if(QSerialPortInfo::availablePorts().isEmpty())
-    {
-        QMessageBox *msgBox = new QMessageBox(this);
-        msgBox->setText("Es wurde kein serielles Interface gefunden. Bitte schließen Sie den Arduino an!");
-        msgBox->exec();
-        return updateToSettings();
-    }
-
     QString serialPortDesc = Main::settings->value("interface/serial",
                                                    QSerialPortInfo::availablePorts().first().portName()).toString();
 
@@ -70,8 +61,8 @@ void MainWindow::updateToSettings()
 
 void MainWindow::init()
 {
-    updateToSettings();
     settingsDialog = new SettingsDialog(this);
+    updateToSettings();
     buildConnects();
 }
 
