@@ -19,9 +19,16 @@ private:
     QString message;
 };
 
-class NoSerialInterfaceException : public VException
+class SerialException : public VException
 {
     using VException::VException;
 };
+
+class NoSerialInterfaceException : public SerialException
+{
+    using SerialException::SerialException;
+};
+
+
 
 #endif // VEXCEPTION_H

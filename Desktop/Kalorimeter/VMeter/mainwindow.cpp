@@ -4,6 +4,9 @@
 #include <QErrorMessage>
 #include <QSerialPortInfo>
 #include <QChartView>
+#include <QMessageBox>
+
+#include <memory>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete settingsDialog;
-    delete plot;
     delete ui;
 }
 
@@ -27,14 +29,24 @@ void MainWindow::showSettingsDialog()
 
 void MainWindow::updateToSettings()
 {
+    //check if any serial interfaces are available
+    if(QSerialPortInfo::availablePorts().isEmpty())
+    {
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setText("Es wurde kein serielles Interface gefunden. Bitte schließen Sie den Arduino an!");
+        msgBox->exec();
+        return updateToSettings();
+    }
+
     QString serialPortDesc = Main::settings->value("interface/serial",
-                                               QSerialPortInfo::availablePorts().first().portName()).toString();
-    plot = new Plot(serialPortDesc);
+                                                   QSerialPortInfo::availablePorts().first().portName()).toString();
+    plot = std::unique_ptr<Plot>(new Plot(serialPortDesc));
+
     plot->setAnimationOptions(QChart::AllAnimations);
     plot->setTitle("Kalorimeter");
 
-    QChartView* chartView = new QChartView();
-    chartView->setChart(plot);
+    QChartView* chartView = new QChartView(this);
+    chartView->setChart(plot.get());
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Maximum);
     chartView->repaint();
@@ -43,10 +55,8 @@ void MainWindow::updateToSettings()
 
 void MainWindow::init()
 {
-    settingsDialog = new SettingsDialog(this);
-
     updateToSettings();
-
+    settingsDialog = new SettingsDialog(this);
     buildConnects();
 }
 

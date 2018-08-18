@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 
+#include <memory>
+
 #include "plot.h"
 #include "settingsdialog.h"
 #include "main.h"
+
 
 class Plot;
 
@@ -30,7 +33,7 @@ private:
 
     Ui::MainWindow *ui;
     SettingsDialog* settingsDialog;
-    Plot* plot;
+    std::unique_ptr<Plot> plot;
 
 };
 

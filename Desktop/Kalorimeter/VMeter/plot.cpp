@@ -1,5 +1,7 @@
 #include "plot.h"
 
+#include "vexception.h"
+
 #include <QtCharts/QAbstractAxis>
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>
@@ -20,6 +22,7 @@ Plot::~Plot()
 {
     try
     {
+        Logger::log << L_INFO << "closing serial interface...\n";
         serialPort->close();
     }catch(...)
     {
@@ -34,34 +37,42 @@ Plot::~Plot()
 void Plot::handleTimeout()
 {
     std::lock_guard<std::mutex> guard(updateData);
-    Logger::log << L_DEBUG << "Open: " << serialPort->isOpen() << " Readable: " << serialPort->isReadable() << "\n";
-    if(! (serialPort->isOpen() && serialPort->isReadable()))
-        return;
-
-    int bytes_available = serialPort->bytesAvailable();
-    if (bytes_available >= 4)
+    try
     {
-        QByteArray byte_array = serialPort->read(bytes_available);
-        QString data = QString::fromUtf8(byte_array);
-        QStringList temps = data.split("\n");
-        QString last = temps.at(temps.size()-2).trimmed();
-        double temp = last.toDouble();
-        Logger::log << L_DEBUG << "Read value " << temp << "\n";
+        Logger::log << L_DEBUG << "Open: " << serialPort->isOpen() << " Readable: " << serialPort->isReadable() << "\n";
+        if(! (serialPort->isOpen() && serialPort->isReadable()))
+            return;
 
-        long timeNow = QDateTime::currentSecsSinceEpoch();
-        long timeSinceStart = timeNow - startTimestamp;
-        long timestampDiff = timeNow - lastTimestamp;
-        lastTimestamp = timeNow;
+        int bytes_available = serialPort->bytesAvailable();
+        if (bytes_available >= 4)
+        {
+            QByteArray byte_array = serialPort->read(bytes_available);
+            QString data = QString::fromUtf8(byte_array);
+            Logger::log << L_DEBUG << "read: " << data << "\n";
 
-        m_x = timeSinceStart;
-        m_y = temp;
-        m_series->append(m_x, m_y);
-        double scrollStart = 100 * ((m_axis->tickCount()-1.0)/m_axis->tickCount());
-        if(m_step >= scrollStart)
-            scroll((plotArea().width()*(timestampDiff/100.0)), 0);
-        else
-            m_step+=timestampDiff;
-        Logger::log << L_DEBUG << m_step << " " << scrollStart << "\n";
+            QStringList temps = data.split("\n");
+            QString last = temps.at(temps.size()-2).trimmed();
+            double temp = last.toDouble();
+            Logger::log << L_DEBUG << "Read value " << temp << "\n";
+
+            long timeNow = QDateTime::currentSecsSinceEpoch();
+            long timeSinceStart = timeNow - startTimestamp;
+            long timestampDiff = timeNow - lastTimestamp;
+            lastTimestamp = timeNow;
+
+            m_x = timeSinceStart;
+            m_y = temp;
+            m_series->append(m_x, m_y);
+            double scrollStart = 100 * ((m_axis->tickCount()-1.0)/m_axis->tickCount());
+            if(m_step >= scrollStart)
+                scroll((plotArea().width()*(timestampDiff/100.0)), 0);
+            else
+                m_step+=timestampDiff;
+            Logger::log << L_DEBUG << m_step << " " << scrollStart << "\n";
+        }
+    } catch(...)
+    {
+        Logger::log << L_ERROR << "fatal error in plotting engine occured!\n";
     }
 
 
@@ -85,7 +96,7 @@ void Plot::init()
             Logger::log << L_INFO << "Available serial interfaces: \n";
             for(QSerialPortInfo pI : QSerialPortInfo::availablePorts())
                 Logger::log << L_INFO << pI.portName() << " " << pI.description() << "\n";
-
+            throw SerialException("could not connect to serial interface");
         }
         serialPort->setBaudRate(Main::settings->value("interface/serial/baudrate","9600").toInt());
         serialPort->setDataBits(QSerialPort::Data8);
@@ -97,9 +108,8 @@ void Plot::init()
         Logger::log << L_INFO << "Initialized serial interface " << serialPort->portName() << " with baudrate " << serialPort->baudRate() << "\n";
     }catch(...)
     {
-        QErrorMessage error;
-        error.showMessage("Failed to open serial interface!");
         Logger::log << L_ERROR << "Failed to open serial interface!\n";
+        throw SerialException("failed to establish connection to serial interface");
     }
 
     m_axis = new QValueAxis();

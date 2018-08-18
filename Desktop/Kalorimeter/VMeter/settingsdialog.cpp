@@ -21,8 +21,23 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
+bool SettingsDialog::detectUserChange()
+{
+    if(Main::settings->value("interface/serial").toString() == serialDescriptionToPortName(ui->serialInterfaceComboBox->currentText()))
+        if(Main::settings->value("interface/serial/baudrate").toString() == ui->bautRateComboBox->currentText())
+            return false;
+    return true;
+}
+
 void SettingsDialog::saveSettings()
 {
+    //cancel if no changes have been made
+    if(!detectUserChange())
+    {
+        this->reject();
+        return;
+    }
+
     Logger::log << L_INFO << "Updating settings...\n";
     Main::settings->setValue("interface/serial",serialDescriptionToPortName(ui->serialInterfaceComboBox->currentText()));
     Main::settings->setValue("interface/serial/baudrate",ui->bautRateComboBox->currentText());

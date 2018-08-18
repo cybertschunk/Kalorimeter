@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 
 namespace Main {
 
-    MainWindow* mainWindow;
-    QSettings* settings;
+    std::unique_ptr<MainWindow> mainWindow;
+    std::unique_ptr<QSettings> settings;
 
     //Methods
     void run(QApplication & app)
@@ -45,7 +45,7 @@ namespace Main {
         Logger::log.init(Logger::All);
         initSettings();
 
-        mainWindow= new MainWindow(Q_NULLPTR);
+        mainWindow= std::unique_ptr<MainWindow>(new MainWindow(Q_NULLPTR));
 
         Logger::log << L_INFO << "Program initialized.\n";
 
@@ -64,8 +64,6 @@ namespace Main {
         else
             Logger::log << L_INFO << "wrote the settings to" << Main::settings->fileName().toStdString() << "\n";
 
-        delete settings;
-
         return EXIT_SUCCESS;
     }
 
@@ -76,7 +74,7 @@ namespace Main {
 
     int initSettings()
     {
-        settings = new QSettings("Evangelische_Schule_Neuruppin", "Kalorimeter");
+        settings = std::unique_ptr<QSettings>(new QSettings("Evangelische_Schule_Neuruppin", "Kalorimeter"));
         settings->setIniCodec("UTF-8");
         Logger::log << L_INFO << "reading config file from " << Main::settings->fileName() << "\n";
         settings->sync();

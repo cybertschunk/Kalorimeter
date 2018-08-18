@@ -26,6 +26,7 @@ private:
     Ui::SettingsDialog *ui;
     void init();
     QString serialDescriptionToPortName(QString description);
+    bool detectUserChange();
 };
 
 #endif // SETTINGSDIALOG_H
