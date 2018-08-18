@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "VMeter"
-#define MyAppVersion "1.0"
-#define MyAppPublisher "Evi forscht! Evangelische Schule Neuruppin"
+#define MyAppVersion "1.1"
+#define MyAppPublisher "Evangelische Schule Neuruppin"
 #define MyAppURL "https://gymnasium-neuruppin.de"
 #define MyAppExeName "VMeter.exe"
 
@@ -11,7 +11,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{D50FE989-C237-40D8-B31C-6238123FBA44}
+AppId={{30856A49-BFE3-4219-A247-E598BD21D411}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -22,6 +22,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=release\LICENSE.txt
+OutputDir=setup
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
@@ -35,6 +36,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "release\VMeter.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
