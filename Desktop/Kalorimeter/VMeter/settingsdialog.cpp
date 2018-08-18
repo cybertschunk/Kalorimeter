@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "logger.h"
+#include "vexception.h"
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -36,6 +37,10 @@ void SettingsDialog::saveSettings()
 
 void SettingsDialog::init()
 {
+    //check if any serial interfaces are available
+    if(QSerialPortInfo::availablePorts().isEmpty())
+        throw NoSerialInterfaceException("No serial interface has been found!");
+
     //Initialize boxes
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     for(QSerialPortInfo port : ports)

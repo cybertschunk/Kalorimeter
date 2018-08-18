@@ -28,14 +28,16 @@ SOURCES += \
         mainwindow.cpp \
         logger.cpp \
         plot.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    vexception.cpp
 
 HEADERS += \
         mainwindow.h \
         main.h \
         logger.h \
         plot.h \
-    settingsdialog.h
+    settingsdialog.h \
+    vexception.h
 
 FORMS += \
         mainwindow.ui \
