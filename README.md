@@ -1,4 +1,5 @@
-# Kalorimeter
+# Kalorimeter 
+[![Build status](https://ci.appveyor.com/api/projects/status/at8wtlm2h8lpegj0?svg=true)](https://ci.appveyor.com/project/cybertschunk/kalorimeter)
 A software to read the data of a temperature sensor and visualize them in a chart.
 
 # Copyright
