@@ -13,7 +13,13 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
-    init();
+    try
+    {
+        init();
+    } catch(...)
+    {
+        Logger::log << L_ERROR << "Fatal error while initializing settingsdialog!\n";
+    }
 }
 
 SettingsDialog::~SettingsDialog()
