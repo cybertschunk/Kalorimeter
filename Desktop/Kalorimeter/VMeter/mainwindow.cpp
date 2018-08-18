@@ -26,7 +26,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::showSettingsDialog()
 {
-    settingsDialog->showNormal();
     settingsDialog->exec();
 }
 
@@ -47,12 +46,15 @@ void MainWindow::updateToSettings()
     plot = std::unique_ptr<Plot>(new Plot(serialPortDesc));
     try
     {
+        //tries to connect to configured serial interface
         plot->init();
     }catch(SerialException se)
     {
-        QErrorMessage errorMsg(this);
-        errorMsg.showMessage("Zu dem konfigurierten seriellen Interface konnte keine Verbindung hergestellt werden. Bitte wählen Sie ein anderes!");
-        return showSettingsDialog();
+        QMessageBox *msgBox = new QMessageBox(this);
+        msgBox->setText("Zu dem seriellen Interface konnte keine Verbindung hergestellt werden! Bitte wählen Sie ein anderes.");
+        msgBox->exec();
+        showSettingsDialog();
+        return updateToSettings();
     }
     plot->setAnimationOptions(QChart::AllAnimations);
     plot->setTitle("Kalorimeter");
